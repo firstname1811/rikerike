@@ -227,6 +227,11 @@
                 opacity: 1;
             }
         }
+
+        /* --- GLOW TEXT --- */
+        .glow-text {
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.7), 0 0 20px rgba(255, 105, 180, 0.5);
+        }
     </style>
 </head>
 
@@ -247,9 +252,10 @@
 
         <!-- PAGE 2: Memory/Love Note -->
         <div class="page" id="page-2">
-            <h2>You allow magic to happen...</h2>
-            <p>Looking back at this year, my favorite moments are simply the ones with <span
-                    class="highlight">you</span>. Your smile lights up my world in ways words can't explain.</p>
+            <h2>You are my <span class="highlight glow-text">Magic</span>...</h2>
+            <p>In a world of billions, my eyes search only for you. <br>
+                Every moment with you feels like a beautiful dream I never want to wake up from.<br>
+                Thank you for being the light that guides me home.</p>
             <button class="btn" onclick="nextPage(2)">Continue</button>
         </div>
 
@@ -270,9 +276,11 @@
         <!-- PAGE 5: GRAND FINALE -->
         <div class="page" id="page-5">
             <h1>Happy New Year<br>Keertichinnu!</h1>
-            <p>Wishing you a year filled with magic, love, and endless joy.</p>
+            <p>My wish for you is simple: <br> May your smile never fade, and may your heart always be full.</p>
             <div class="heart-icon">❤️</div>
-            <p style="font-size: 1.2rem; margin-top: 2rem; color: #ffb7b2;">You mean everything to me.</p>
+            <p style="font-size: 1.3rem; margin-top: 2rem; color: #ffb7b2; font-style: italic;" class="glow-text">
+                "I love you more than words can say,<br> today, tomorrow, and every day."
+            </p>
         </div>
 
     </div>
