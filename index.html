@@ -592,7 +592,7 @@
 
         function createSparkle(x, y) {
             const sparkle = document.createElement('div');
-            const sizes = ['✨', '⭐', '❤️', '🔹']; // Magical bits
+            const sizes = ['❤️', '💖', '💝', '�', '🥰', '🫂']; // Strictly loving elements
             sparkle.innerHTML = sizes[Math.floor(Math.random() * sizes.length)];
             sparkle.style.position = 'fixed';
             sparkle.style.left = x + 'px';
@@ -621,7 +621,7 @@
         });
 
         function createBurstAt(x, y) {
-            const emojis = ['❤️', '💖', '✨', '🌟', '💥', '🔥', '😍'];
+            const emojis = ['❤️', '💖', '💝', '💕', '�', '🥰', '🫂', '�']; // Pure Love & Hugs
             for (let i = 0; i < 30; i++) { // More particles
                 const heart = document.createElement('div');
                 heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
