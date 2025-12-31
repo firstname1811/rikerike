@@ -396,25 +396,40 @@
                 Journey</button>
         </div>
 
-        <!-- PAGE 3: ANTICIPATION -->
+        <!-- PAGE 3: SPECIAL QUOTE -->
         <div class="page" id="page-3">
+            <div
+                style="font-size: 6rem; color: rgba(255,255,255,0.2); line-height: 1; font-family: 'Times New Roman', serif;">
+                &ldquo;</div>
+            <p class="fade-in-up"
+                style="font-family: 'Playfair Display', serif; font-size: 2rem; font-style: italic; max-width: 700px; margin: -20px auto 10px auto; color: #fff;">
+                "I never believed in destiny <br> until it led me to <span class="highlight">you</span>, Keerti."
+            </p>
+            <p class="fade-in-up delay-1" style="font-size: 1.1rem; opacity: 0.8; margin-bottom: 30px;">
+                Now I know that every step I took was just <br> a journey to find my way to your heart.
+            </p>
+            <button class="btn fade-in-up delay-2" onclick="nextPage(3)">Forever Yours</button>
+        </div>
+
+        <!-- PAGE 4: ANTICIPATION -->
+        <div class="page" id="page-4">
             <h2 class="fade-in-up">Are You Ready?</h2>
             <p class="fade-in-up delay-1">
                 The clock is ticking... <br>
                 A new chapter waits for us. <br>
                 Together.
             </p>
-            <button class="btn fade-in-up delay-2" onclick="nextPage(3)">Begin Countdown</button>
+            <button class="btn fade-in-up delay-2" onclick="nextPage(4)">Begin Countdown</button>
         </div>
 
-        <!-- PAGE 4: 10 SECOND COUNTDOWN -->
-        <div class="page" id="page-4">
+        <!-- PAGE 5: 10 SECOND COUNTDOWN -->
+        <div class="page" id="page-5">
             <div class="big-count" id="countdown-number">10</div>
             <p style="letter-spacing: 5px; text-transform: uppercase; margin-top: 20px;">Seconds Remaining</p>
         </div>
 
-        <!-- PAGE 5: GRAND FINALE -->
-        <div class="page" id="page-5">
+        <!-- PAGE 6: GRAND FINALE -->
+        <div class="page" id="page-6">
             <h1>Happy New Year<br>Keertichinnu!</h1>
 
             <div class="giant-heart">❤️</div>
@@ -537,11 +552,11 @@
                 next.classList.remove('exit');
                 next.classList.add('active');
 
-                // Trigger Timer if Page 4
-                if (next.id === 'page-4') startTimer();
+                // Trigger Timer if Page 5
+                if (next.id === 'page-5') startTimer();
 
-                // Trigger Fireworks if Page 5
-                if (next.id === 'page-5') {
+                // Trigger Fireworks if Page 6
+                if (next.id === 'page-6') {
                     fireworksActive = true;
                     document.title = "Happy New Year Keerti! 🎉";
                 }
@@ -557,7 +572,7 @@
                 el.innerText = timeLeft;
                 if (timeLeft <= 0) {
                     clearInterval(timer);
-                    nextPage(4);
+                    nextPage(5);
                 }
             }, 1000);
         }
