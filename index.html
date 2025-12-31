@@ -175,6 +175,31 @@
             font-size: 2rem;
         }
 
+        .envelope-wrapper:hover {
+            animation: shake 0.5s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+
+            25% {
+                transform: scale(1.05) rotate(-3deg);
+            }
+
+            50% {
+                transform: scale(1.05) rotate(0deg);
+            }
+
+            75% {
+                transform: scale(1.05) rotate(3deg);
+            }
+        }
+
         /* Open State for Envelope */
         .envelope-wrapper.open .lid {
             transform: rotateX(180deg);
@@ -548,29 +573,30 @@
         });
 
         function createBurstAt(x, y) {
-            for (let i = 0; i < 20; i++) {
+            const emojis = ['❤️', '💖', '✨', '🌟', '💥', '🔥', '😍'];
+            for (let i = 0; i < 30; i++) { // More particles
                 const heart = document.createElement('div');
-                heart.innerHTML = '❤️';
+                heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
                 heart.style.position = 'fixed';
                 heart.style.left = x + 'px';
                 heart.style.top = y + 'px';
-                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                heart.style.fontSize = (Math.random() * 25 + 10) + 'px'; // Larger variation
                 heart.style.pointerEvents = 'none';
-                heart.style.transition = 'transform 1s ease-out, opacity 1s ease-out';
+                heart.style.transition = 'transform 0.8s ease-out, opacity 0.8s ease-out'; // Faster fade
                 heart.style.zIndex = '9999';
                 document.body.appendChild(heart);
 
                 const angle = Math.random() * Math.PI * 2;
-                const dist = Math.random() * 150 + 50;
+                const dist = Math.random() * 200 + 80; // Wider burst
                 const dx = Math.cos(angle) * dist;
-                const dy = Math.sin(angle) * dist - 50;
+                const dy = Math.sin(angle) * dist - 80;
 
                 requestAnimationFrame(() => {
-                    heart.style.transform = `translate(${dx}px, ${dy}px) rotate(${Math.random() * 360}deg) scale(${Math.random() + 0.5})`;
+                    heart.style.transform = `translate(${dx}px, ${dy}px) rotate(${Math.random() * 720}deg) scale(${Math.random() * 1.5})`;
                     heart.style.opacity = '0';
                 });
 
-                setTimeout(() => heart.remove(), 1000);
+                setTimeout(() => heart.remove(), 800);
             }
         }
 
