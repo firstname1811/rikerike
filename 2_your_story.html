@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="bg-hearts" id="bg-hearts"></div>
+
+    <div class="container">
+        <h2>You make life magical...</h2>
+        <p>Looking back at this year, my favorite moments are simply the ones with <span
+                class="highlight">you</span>.<br>
+            Your smile lights up my world in ways words can't explain.</p>
+
+        <p style="font-size: 1rem; opacity: 0.9;">Are you ready for the next chapter?</p>
+
+        <a href="3_countdown.html" class="btn">Let's Go!</a>
+    </div>
+
+    <script>
+        // Background Hearts Animation
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('bg-heart');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 5 + 5 + 's';
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            heart.innerText = '❤️';
+            document.getElementById('bg-hearts').appendChild(heart);
+            setTimeout(() => heart.remove(), 10000);
+        }
+        setInterval(createHeart, 500);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counting Down...</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="bg-hearts" id="bg-hearts"></div>
+
+    <div class="container">
+        <h2>The Magic Begins In...</h2>
+
+        <div class="timer">
+            <div class="time-unit"><span class="number" id="days">00</span><span class="label">Days</span></div>
+            <div class="time-unit"><span class="number" id="hours">00</span><span class="label">Hrs</span></div>
+            <div class="time-unit"><span class="number" id="minutes">00</span><span class="label">Mins</span></div>
+            <div class="time-unit"><span class="number" id="seconds">00</span><span class="label">Secs</span></div>
+        </div>
+
+        <p style="font-size: 1rem; opacity: 0.8;">Keep this page open. The magic will happen automatically.</p>
+    </div>
+
+    <script>
+        // --- TIMER LOGIC ---
+        const currentYear = new Date().getFullYear();
+        const nextYear = currentYear + 1;
+        const targetDate = new Date(`January 1, ${nextYear} 00:00:00`).getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                // Time up! Redirect to finale!
+                window.location.href = "4_happy_new_year.html";
+            } else {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = String(days).padStart(2, '0');
+                document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+                document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Background Hearts Animation
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('bg-heart');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 5 + 5 + 's';
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            heart.innerText = '❤️';
+            document.getElementById('bg-hearts').appendChild(heart);
+            setTimeout(() => heart.remove(), 10000);
+        }
+        setInterval(createHeart, 500);
+    </script>
+</body>
+
+</html>
