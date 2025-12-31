@@ -6,413 +6,590 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For Keerti ❤️</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;500;700&family=Parisienne&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;500;700&family=Playfair+Display:ital@0;1&display=swap');
 
-        /* --- GLOBAL STYLES --- */
+        /* --- GLOBAL & RESET --- */
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
-            background: linear-gradient(135deg, #2b0a16 0%, #5e0a1f 50%, #2b0a16 100%);
+            background: #0f0c29;
+            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #fff;
             font-family: 'Montserrat', sans-serif;
-            perspective: 1000px;
+            perspective: 1500px;
+            /* Stronger perspective for 3D */
         }
 
-        /* --- BACKGROUND ANIMATION --- */
-        .bg-hearts {
+        /* --- CANVAS LAYERS --- */
+        #starfield {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
             z-index: 0;
-            overflow: hidden;
         }
 
-        .bg-heart {
-            position: absolute;
-            top: -10%;
-            font-size: 20px;
-            color: rgba(255, 105, 180, 0.3);
-            animation: floatDown linear infinite;
-        }
-
-        @keyframes floatDown {
-            0% {
-                transform: translateY(-10vh) translateX(0) rotate(0deg);
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 0.5;
-            }
-
-            100% {
-                transform: translateY(110vh) translateX(100px) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        canvas {
+        #fireworks {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
+            z-index: 2;
+            /* On top of logic, below text if needed */
+            pointer-events: none;
         }
 
-        /* --- CONTAINER & PAGES --- */
+        /* --- MAIN CONTAINER --- */
         .container {
             position: relative;
-            width: 90%;
-            max-width: 600px;
-            min-height: 400px;
             z-index: 10;
-        }
-
-        .page {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- PAGES --- */
+        .page {
+            position: absolute;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: rgba(80, 10, 30, 0.6);
-            backdrop-filter: blur(15px);
-            padding: 2rem;
-            border-radius: 30px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 192, 203, 0.3);
+            width: 100%;
+            height: 100%;
             opacity: 0;
             pointer-events: none;
-            transform: scale(0.8) translateY(50px);
-            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            box-sizing: border-box;
+            transition: opacity 1s ease-in-out, transform 1s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .page.active {
             opacity: 1;
             pointer-events: all;
-            transform: scale(1) translateY(0);
-            z-index: 20;
+            transform: scale(1);
         }
 
         .page.exit {
             opacity: 0;
-            transform: scale(1.1) translateY(-50px);
-            z-index: 10;
+            transform: scale(1.1) translateY(-20px);
+            pointer-events: none;
+        }
+
+        /* --- 3D ENVELOPE (Impressive Intro) --- */
+        .envelope-wrapper {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            cursor: pointer;
+            transition: transform 0.5s;
+        }
+
+        .envelope-wrapper:hover {
+            transform: scale(1.05);
+            /* Gentle hover zoom */
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #c0392b;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            z-index: 5;
+            transition: transform 1s ease;
+        }
+
+        .lid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            /* Half height */
+            background: #e74c3c;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            transform-origin: top;
+            transition: transform 0.8s 0.2s ease-in-out;
+            z-index: 6;
+        }
+
+        .flap-left,
+        .flap-right {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: #c0392b;
+            z-index: 5;
+        }
+
+        .flap-left {
+            clip-path: polygon(0 0, 50% 50%, 0 100%);
+            background: #a93226;
+        }
+
+        .flap-right {
+            clip-path: polygon(100% 0, 50% 50%, 100% 100%);
+            background: #a93226;
+        }
+
+        .bottom-pocket {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #922b21;
+            clip-path: polygon(0 100%, 50% 50%, 100% 100%);
+            z-index: 6;
+        }
+
+        .letter {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            height: 90%;
+            background: #fff;
+            border-radius: 5px;
+            z-index: 4;
+            transition: transform 0.8s ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .letter-content {
+            font-family: 'Great Vibes', cursive;
+            color: #c0392b;
+            font-size: 2rem;
+        }
+
+        /* Open State for Envelope */
+        .envelope-wrapper.open .lid {
+            transform: rotateX(180deg);
+        }
+
+        .envelope-wrapper.open .letter {
+            transform: translateX(-50%) translateY(-120px) scale(1.1);
+            z-index: 7;
+            /* Bring letter above everything */
+        }
+
+        .envelope-wrapper.open .envelope {
+            transform: translateY(100px) scale(0.8);
+            opacity: 0;
+            transition-delay: 1s;
+            /* Fade out envelope after letter extracts */
         }
 
         /* --- TYPOGRAPHY --- */
         h1 {
             font-family: 'Great Vibes', cursive;
-            font-size: 4rem;
-            margin: 0 0 1rem 0;
-            background: linear-gradient(to right, #ffdde1, #ee9ca7);
+            font-size: 6rem;
+            margin: 0;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 10px rgba(255, 105, 180, 0.3);
-            line-height: 1.1;
+            text-shadow: 0 0 20px rgba(255, 154, 158, 0.4);
+            animation: floatText 4s ease-in-out infinite;
         }
 
         h2 {
-            font-family: 'Parisienne', cursive;
-            font-size: 2.5rem;
-            color: #ffd1dc;
-            margin-bottom: 1.5rem;
-        }
-
-        p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            color: #fce4ec;
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: #fff;
             margin-bottom: 2rem;
         }
 
-        .highlight {
-            color: #ff4b6a;
-            font-weight: bold;
+        p {
+            font-size: 1.5rem;
+            line-height: 1.8;
+            max-width: 700px;
+            color: #e0e0e0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        /* --- INTERACTIVE ELEMENTS --- */
+        .highlight {
+            color: #ff6b81;
+            font-weight: bold;
+            font-style: italic;
+            text-shadow: 0 0 10px rgba(255, 107, 129, 0.6);
+        }
+
+        /* --- BUTTONS (Cinematic) --- */
         .btn {
-            background: linear-gradient(45deg, #ff4b6a, #ff758c);
-            border: none;
-            padding: 12px 30px;
-            color: white;
+            margin-top: 3rem;
+            padding: 15px 40px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
             font-family: 'Montserrat', sans-serif;
             font-size: 1.1rem;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 75, 106, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 3px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 75, 106, 0.6);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
-        .btn:active {
-            transform: translateY(1px);
-        }
-
-        /* --- ANIMATIONS --- */
-        .heart-icon {
-            font-size: 3rem;
-            color: #ff4b6a;
-            animation: heartbeat 1.5s infinite;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        @keyframes heartbeat {
-            0% {
-                transform: scale(1);
-            }
-
-            15% {
-                transform: scale(1.2);
-            }
-
-            30% {
-                transform: scale(1);
-            }
-
-            45% {
-                transform: scale(1.2);
-            }
-
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        /* --- BIG COUNTDOWN STYLES --- */
+        /* --- COUNTDOWN (Big & Thin) --- */
         .big-count {
-            font-size: 8rem;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 30px rgba(255, 105, 180, 0.8);
-            animation: pulseCount 1s infinite;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Playfair Display', serif;
+            font-size: 10rem;
+            font-weight: 700;
+            background: linear-gradient(to bottom, #fff, #999);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
         }
 
-        @keyframes pulseCount {
-            0% {
-                transform: scale(1);
-                opacity: 1;
+        @keyframes floatText {
+
+            0%,
+            100% {
+                transform: translateY(0);
             }
 
             50% {
-                transform: scale(1.1);
-                opacity: 0.8;
-            }
-
-            100% {
-                transform: scale(1);
-                opacity: 1;
+                transform: translateY(-10px);
             }
         }
 
-        /* --- GLOW TEXT --- */
-        .glow-text {
-            text-shadow: 0 0 10px rgba(255, 105, 180, 0.7), 0 0 20px rgba(255, 105, 180, 0.5);
+        /* --- FADE IN UTILS --- */
+        .fade-in-up {
+            animation: fadeInUp 1.5s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .delay-1 {
+            animation-delay: 0.5s;
+        }
+
+        .delay-2 {
+            animation-delay: 1.5s;
+        }
+
+        .delay-3 {
+            animation-delay: 2.5s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="bg-hearts" id="bg-hearts"></div>
+    <canvas id="starfield"></canvas>
     <canvas id="fireworks"></canvas>
 
     <div class="container">
 
-        <!-- PAGE 1: Intro -->
+        <!-- PAGE 1: ENVELOPE SURPRISE -->
         <div class="page active" id="page-1">
-            <div class="heart-icon">❤️</div>
-            <h1>Hey Keerti...</h1>
-            <p>I have a little surprise for you.</p>
-            <button class="btn" onclick="nextPage(1)">Open It</button>
+            <h2 style="font-size: 1.5rem; letter-spacing: 4px; opacity: 0.8; margin-bottom: 50px;">A SPECIAL DELIVERY
+                FOR KEERTI</h2>
+
+            <div class="envelope-wrapper" onclick="openEnvelope()" id="envelope">
+                <div class="envelope">
+                    <div class="lid"></div>
+                    <div class="flap-left"></div>
+                    <div class="flap-right"></div>
+                    <div class="bottom-pocket"></div>
+                    <div class="letter">
+                        <div class="letter-content">Open Me</div>
+                    </div>
+                </div>
+            </div>
+
+            <p style="margin-top: 50px; font-size: 0.9rem; opacity: 0.5;">(Tap the envelope)</p>
         </div>
 
-        <!-- PAGE 2: Memory/Love Note -->
+        <!-- PAGE 2: CINEMATIC LOVE NOTE -->
         <div class="page" id="page-2">
-            <h2>You are my <span class="highlight glow-text">Magic</span>...</h2>
-            <p>In a world of billions, my eyes search only for you. <br>
-                Every moment with you feels like a beautiful dream I never want to wake up from.<br>
-                Thank you for being the light that guides me home.</p>
-            <button class="btn" onclick="nextPage(2)">Continue</button>
+            <h2 class="fade-in-up">Keerti...</h2>
+            <p class="fade-in-up delay-1">
+                They say magic doesn't exist... <br>
+                But then, how do you explain the way the world stops <br>
+                every time you <span class="highlight">smile</span>?
+            </p>
+            <p class="fade-in-up delay-2"
+                style="font-size: 1.2rem; max-width: 600px; margin-top: 2rem; font-style: italic; color: #ff9a9e;">
+                "You are the poem I never knew how to write,<br>and this life is sweeter music because you are in it."
+            </p>
+            <button class="btn fade-in-up delay-3" onclick="nextPage(2)">Continue Journey</button>
         </div>
 
-        <!-- PAGE 3: Anticipation -->
+        <!-- PAGE 3: ANTICIPATION -->
         <div class="page" id="page-3">
-            <h2>Are you ready?</h2>
-            <p>We are just moments away from a brand new chapter. <br>I promise to make it the best one yet.</p>
-            <button class="btn" onclick="nextPage(3)">Let's Go!</button>
+            <h2 class="fade-in-up">Are You Ready?</h2>
+            <p class="fade-in-up delay-1">
+                The clock is ticking... <br>
+                A new chapter waits for us. <br>
+                Together.
+            </p>
+            <button class="btn fade-in-up delay-2" onclick="nextPage(3)">Begin Countdown</button>
         </div>
 
-        <!-- PAGE 4: 10 Second Countdown -->
+        <!-- PAGE 4: 10 SECOND COUNTDOWN -->
         <div class="page" id="page-4">
-            <h2>Get Ready...</h2>
             <div class="big-count" id="countdown-number">10</div>
-            <p>Seconds until magic!</p>
+            <p style="letter-spacing: 5px; text-transform: uppercase; margin-top: 20px;">Seconds Remaining</p>
         </div>
 
         <!-- PAGE 5: GRAND FINALE -->
         <div class="page" id="page-5">
             <h1>Happy New Year<br>Keertichinnu!</h1>
-            <p>My wish for you is simple: <br> May your smile never fade, and may your heart always be full.</p>
-            <div class="heart-icon">❤️</div>
-            <p style="font-size: 1.3rem; margin-top: 2rem; color: #ffb7b2; font-style: italic;" class="glow-text">
-                "I love you more than words can say,<br> today, tomorrow, and every day."
+            <p class="fade-in-up delay-1" style="font-size: 1.8rem; margin-top: 2rem;">
+                Here's to another 365 days of<br>
+                <span class="highlight">Us</span>.
+            </p>
+            <p class="fade-in-up delay-2" style="margin-top: 3rem; font-size: 1rem; opacity: 0.7; letter-spacing: 2px;">
+                FOREVER & ALWAYS
             </p>
         </div>
 
     </div>
 
     <script>
-        let fireworksActive = false;
+        // --- STARFIELD BACKGROUND (Interactive) ---
+        const starCanvas = document.getElementById('starfield');
+        const starCtx = starCanvas.getContext('2d');
+        let width, height;
+        let stars = [];
+        const mouse = { x: null, y: null };
 
-        // --- PAGE NAVIGATION ---
-        function nextPage(currentPageNum) {
-            const current = document.getElementById(`page-${currentPageNum}`);
-            const next = document.getElementById(`page-${currentPageNum + 1}`);
-
-            if (current && next) {
-                current.classList.remove('active');
-                current.classList.add('exit');
-
-                setTimeout(() => {
-                    next.classList.add('active');
-
-                    // If moving to Countdown Page (Page 4), start the timer
-                    if (next.id === 'page-4') {
-                        startTenSecondTimer();
-                    }
-
-                    // If moving to Finale (Page 5), activate fireworks
-                    if (next.id === 'page-5') {
-                        fireworksActive = true;
-                        document.title = "❤️ Happy New Year Keerti! ❤️";
-                    }
-                }, 300);
+        function initStars() {
+            width = starCanvas.width = window.innerWidth;
+            height = starCanvas.height = window.innerHeight;
+            stars = [];
+            for (let i = 0; i < 150; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 2,
+                    speedX: (Math.random() - 0.5) * 0.5,
+                    speedY: (Math.random() - 0.5) * 0.5
+                });
             }
         }
 
-        // --- 10 SECOND TIMER LOGIC ---
-        function startTenSecondTimer() {
-            let count = 10;
-            const element = document.getElementById('countdown-number');
+        window.addEventListener('resize', () => {
+            initStars();
+            resizeFireworks();
+        });
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
 
-            const interval = setInterval(() => {
-                count--;
-                element.innerText = count;
+        function animateStars() {
+            starCtx.clearRect(0, 0, width, height);
+            starCtx.fillStyle = '#fff';
 
-                if (count <= 0) {
-                    clearInterval(interval);
-                    // Time's up! Move to Page 5
+            // Draw Stars
+            stars.forEach(star => {
+                starCtx.beginPath();
+                starCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                starCtx.fill();
+
+                // Move Star
+                star.x += star.speedX;
+                star.y += star.speedY;
+
+                // Wrap around screen
+                if (star.x < 0) star.x = width;
+                if (star.x > width) star.x = 0;
+                if (star.y < 0) star.y = height;
+                if (star.y > height) star.y = 0;
+
+                // Connect to mouse if close (Interactivity)
+                if (mouse.x) {
+                    const dx = mouse.x - star.x;
+                    const dy = mouse.y - star.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 120) {
+                        starCtx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / 120})`;
+                        starCtx.lineWidth = 0.5;
+                        starCtx.beginPath();
+                        starCtx.moveTo(star.x, star.y);
+                        starCtx.lineTo(mouse.x, mouse.y);
+                        starCtx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(animateStars);
+        }
+
+        initStars();
+        animateStars();
+
+        // --- ENVELOPE LOGIC ---
+        function openEnvelope() {
+            const envelope = document.getElementById('envelope');
+            envelope.classList.add('open');
+
+            // Wait for animation to finish then go to next page
+            setTimeout(() => {
+                nextPage(1);
+            }, 1800);
+        }
+
+        // --- PAGE NAVIGATION ---
+        function nextPage(currentNum) {
+            const current = document.getElementById(`page-${currentNum}`);
+            const next = document.getElementById(`page-${currentNum + 1}`);
+
+            if (current) current.classList.remove('active');
+            if (current) current.classList.add('exit');
+
+            if (next) {
+                // Remove exit class if it was there from a reset (not applicable here but good practice)
+                next.classList.remove('exit');
+                next.classList.add('active');
+
+                // Trigger Timer if Page 4
+                if (next.id === 'page-4') startTimer();
+
+                // Trigger Fireworks if Page 5
+                if (next.id === 'page-5') {
+                    fireworksActive = true;
+                    document.title = "Happy New Year Keerti! 🎉";
+                }
+            }
+        }
+
+        // --- TIMER ---
+        function startTimer() {
+            let timeLeft = 10;
+            const el = document.getElementById('countdown-number');
+            const timer = setInterval(() => {
+                timeLeft--;
+                el.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
                     nextPage(4);
                 }
             }, 1000);
         }
 
-        // --- HEART BACKGROUND ---
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('bg-heart');
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 5 + 5 + 's';
-            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
-            heart.innerText = '❤️';
-            document.getElementById('bg-hearts').appendChild(heart);
-            setTimeout(() => heart.remove(), 10000);
-        }
-        setInterval(createHeart, 500);
-
-        // --- FIREWORKS ---
-        const canvas = document.getElementById('fireworks');
-        const ctx = canvas.getContext('2d');
-        let width, height;
+        // --- FIREWORKS SYSTEM (Advanced) ---
+        const fwCanvas = document.getElementById('fireworks');
+        const fwCtx = fwCanvas.getContext('2d');
+        let fwWidth, fwHeight;
         let particles = [];
+        let fireworksActive = false;
 
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
+        function resizeFireworks() {
+            fwWidth = fwCanvas.width = window.innerWidth;
+            fwHeight = fwCanvas.height = window.innerHeight;
         }
-        window.addEventListener('resize', resize);
-        resize();
+        resizeFireworks();
 
         class Particle {
-            constructor(x, y, color) {
+            constructor(x, y, hue) {
                 this.x = x;
                 this.y = y;
-                this.color = color;
+                this.hue = hue;
+                this.destX = (Math.random() - 0.5) * 100 + x;
+                this.destY = (Math.random() - 0.5) * 100 + y;
                 const angle = Math.random() * Math.PI * 2;
-                const velocity = Math.random() * (fireworksActive ? 6 : 2) + 1; // Slower when idle
-                this.vx = Math.cos(angle) * velocity;
-                this.vy = Math.sin(angle) * velocity;
+                const speed = Math.random() * 5 + 2;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
                 this.alpha = 1;
-                this.decay = Math.random() * 0.02 + 0.015;
+                this.decay = Math.random() * 0.015 + 0.01;
+                this.gravity = 0.05;
             }
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
-                this.vy += 0.05;
+                this.vy += this.gravity;
                 this.alpha -= this.decay;
             }
             draw() {
-                ctx.save();
-                ctx.globalAlpha = this.alpha;
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
+                fwCtx.save();
+                fwCtx.globalAlpha = this.alpha;
+                fwCtx.fillStyle = `hsl(${this.hue}, 100%, 60%)`;
+                fwCtx.beginPath();
+                fwCtx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                fwCtx.fill();
+                fwCtx.restore();
             }
         }
 
-        function createFirework() {
-            const x = Math.random() * width;
-            const y = Math.random() * (height / 2);
-            const colors = ['#ff0044', '#ff6b81', '#ffcccc', '#ffd700', '#ffffff'];
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            const particleCount = fireworksActive ? 80 : 20;
-
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle(x, y, color));
+        function launchFirework() {
+            if (!fireworksActive) return;
+            const x = Math.random() * fwWidth;
+            const y = Math.random() * (fwHeight * 0.5);
+            const hue = Math.random() * 360;
+            for (let i = 0; i < 60; i++) {
+                particles.push(new Particle(x, y, hue));
             }
         }
 
-        function animate() {
-            ctx.fillStyle = 'rgba(43, 10, 22, 0.2)';
-            ctx.fillRect(0, 0, width, height);
+        function animateFireworks() {
+            // Clear trail
+            fwCtx.globalCompositeOperation = 'destination-out';
+            fwCtx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            fwCtx.fillRect(0, 0, fwWidth, fwHeight);
 
-            const chance = fireworksActive ? 0.1 : 0.02; // More fireworks when active
-            if (Math.random() < chance) createFirework();
+            fwCtx.globalCompositeOperation = 'lighter';
+
+            if (fireworksActive && Math.random() < 0.1) {
+                launchFirework();
+            }
 
             for (let i = particles.length - 1; i >= 0; i--) {
                 particles[i].update();
                 particles[i].draw();
                 if (particles[i].alpha <= 0) particles.splice(i, 1);
             }
-            requestAnimationFrame(animate);
+            requestAnimationFrame(animateFireworks);
         }
-        animate();
+        animateFireworks();
+
     </script>
 </body>
 
