@@ -546,22 +546,27 @@
 
         // --- PAGE NAVIGATION ---
         function nextPage(currentNum) {
-            const current = document.getElementById(`page-${currentNum}`);
-            const next = document.getElementById(`page-${currentNum + 1}`);
+            goToPage(currentNum, currentNum + 1);
+        }
 
-            if (current) current.classList.remove('active');
-            if (current) current.classList.add('exit');
+        function goToPage(currentNum, nextNum) {
+            const current = document.getElementById(`page-${currentNum}`);
+            const next = document.getElementById(`page-${nextNum}`);
+
+            if (current) {
+                current.classList.remove('active');
+                current.classList.add('exit');
+            }
 
             if (next) {
-                // Remove exit class if it was there from a reset (not applicable here but good practice)
                 next.classList.remove('exit');
                 next.classList.add('active');
 
-                // Trigger Timer if Page 5
-                if (next.id === 'page-5') startTimer();
+                // Trigger Timer if Page 6 (Countdown)
+                if (next.id === 'page-6') startTimer();
 
-                // Trigger Fireworks if Page 6
-                if (next.id === 'page-6') {
+                // Trigger Fireworks if Page 7 (Finale)
+                if (next.id === 'page-7') {
                     fireworksActive = true;
                     document.title = "Happy New Year Keerti! 🎉";
                 }
@@ -577,15 +582,9 @@
                 el.innerText = timeLeft;
                 if (timeLeft <= 0) {
                     clearInterval(timer);
-                    nextPage(5);
+                    nextPage(6);
                 }
             }, 1000);
-        }
-
-        // --- NO BUTTON LOGIC ---
-        function handleNo() {
-            alert("There is no 'No' when it comes to us! 😉\nGet ready for magic!");
-            nextPage(4);
         }
 
         // --- FIREWORKS SYSTEM (Advanced) ---
