@@ -21,6 +21,19 @@
             color: #fff;
             font-family: 'Montserrat', sans-serif;
             perspective: 1500px;
+            animation: heartbeatBg 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes heartbeatBg {
+            0% {
+                background-size: 100% 100%;
+            }
+
+            100% {
+                background-size: 120% 120%;
+            }
+
+            /* Subtle breathing effect */
         }
 
         /* --- CANVAS LAYERS --- */
@@ -566,6 +579,41 @@
         animateStars();
 
         // --- GLOBAL INTERACTION ---
+
+        // Sparkle Trail
+        let lastSparkleTime = 0;
+        window.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            if (now - lastSparkleTime > 50) { // Limit spawn rate
+                createSparkle(e.clientX, e.clientY);
+                lastSparkleTime = now;
+            }
+        });
+
+        function createSparkle(x, y) {
+            const sparkle = document.createElement('div');
+            const sizes = ['✨', '⭐', '❤️', '🔹']; // Magical bits
+            sparkle.innerHTML = sizes[Math.floor(Math.random() * sizes.length)];
+            sparkle.style.position = 'fixed';
+            sparkle.style.left = x + 'px';
+            sparkle.style.top = y + 'px';
+            sparkle.style.fontSize = (Math.random() * 10 + 5) + 'px';
+            sparkle.style.pointerEvents = 'none';
+            sparkle.style.zIndex = '9998';
+            sparkle.style.opacity = '1';
+            sparkle.style.transition = 'top 1s ease-in, opacity 1s ease-out';
+
+            document.body.appendChild(sparkle);
+
+            // Fall down effect
+            requestAnimationFrame(() => {
+                sparkle.style.top = (y + 50) + 'px';
+                sparkle.style.opacity = '0';
+            });
+
+            setTimeout(() => sparkle.remove(), 1000);
+        }
+
         window.addEventListener('click', (e) => {
             // Avoid double-burst on specific interactive elements if needed
             // But for now, more love is better!
